@@ -100,8 +100,17 @@ int SNetThreadingInit(int argc, char **argv)
       /* Threshold for placement scheduler */
       i = i + 1;
       config.threshold = atof(argv[i]);
-    } else if(strcmp(argv[i], "-placement") == 0) {
-      config.placement = 1;
+    } else if(strcmp(argv[i], "-sockets") == 0 && i + 1 <= argc) {
+      i = i + 1;
+      config.sockets = atoi(argv[i]);
+    } else if(strcmp(argv[i], "-cores") == 0 && i + 1 <= argc) {
+      i = i + 1;
+      config.cores = atoi(argv[i]);
+    } else if(strcmp(argv[i], "-threads") == 0 && i + 1 <= argc) {
+      i = i + 1;
+      config.threads = atoi(argv[i]);
+    } else if(strcmp(argv[i], "-gather") == 0) {
+      config.gather = 1;
     }
   }
 
