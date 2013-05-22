@@ -142,7 +142,13 @@ int SNetThreadingInit(int argc, char **argv)
 #endif
 
   config.proc_others = num_others;
-  config.num_workers = num_workers ? num_workers : config.num_workers;
+  if (num_workers) {
+    config.proc_workers = num_workers;
+    config.num_workers = config.proc_others + config.proc_workers;
+  } else {
+    config.proc_workers = config.num_workers - config.proc_others;
+    num_workers = config.proc_workers;
+  }
 
 #ifdef USE_LOGGING
   /* initialise monitoring module */
