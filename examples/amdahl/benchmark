@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+export MMAP=""
+
+mapping () {
+    MMAP="-1"
+    for ((x = 2; x <= $1; x++)); do
+        MMAP="$MMAP,$x"
+    done
+}
+
+load () {
+    load=""
+    for ((x = 1; x <= $#; x++)); do
+        load="$load ${!x}"
+    done
+}
+
+elim_spaces () {
+    local result="$1"
+    for ((x = 2; x <= $#; x++)); do
+        result="$result-${!x}"
+    done
+    echo $result
+}
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <load 1> [<load 2> ...]"
+    exit 1
+fi
+
+while read polynom; do
+    for alpha in 100 75 50 25 -1; do
+        for i in 1 2 4 8 16 32 40 47; do
+            mapping $i
+            load $@
+            if [ "$alpha" = "-1" ]; then
+                name=0
+            else
+                name=$alpha
+            fi
+            ./genInput.sh $alpha $polynom $load | ./amdahl -m A -dloc -wo 1 -w 48 -o $(elim_spaces $polynom)-amdahl-$name-$i
+            mv n00_tasks.map $(elim_spaces $polynom)-amdahl-$name-${i}.map
+            mv mon_n00_worker01.log $(elim_spaces $polynom)-amdahl-$name-${i}.log
+        done
+    done
+done

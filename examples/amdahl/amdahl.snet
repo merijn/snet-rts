@@ -1,0 +1,18 @@
+  <metadata>
+   <boxdefault>
+     <interface value="SAC4SNet" />
+     <SACmodule>amdahl</SACmodule>
+   </boxdefault>
+  </metadata>
+
+net amdahl {
+    <metadata>
+      <box name="amdahl" >
+        <SACboxfun>amdahl</SACboxfun>
+        <SACdefaultmap>$MMAP</SACdefaultmap>
+      </box>
+    </metadata>
+
+  box amdahl ((<predictor>,<alpha>,<order>,coefficients) -> (<predictor>,seq,par));
+
+} connect amdahl@1 .. [{seq,par} -> {}];

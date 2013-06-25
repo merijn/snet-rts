@@ -1,0 +1,43 @@
+module amdahl;
+
+use Structures: all;
+use Math: {log,ceil,pow};
+
+export all;
+
+double work(int dummy)
+{
+    j = 0.0;
+    for (i = 0; i <= 25000000; i++) {
+        j += log(10000000.0);
+    }
+
+    return j;
+}
+
+double, double[.] task( double load, int iAlpha)
+{
+    dAlpha = iAlpha == -1 ? 0.0 : tod(iAlpha) / 100.0;
+    sequential = 0.0;
+    for (i = 0; i <= toi(load * (1.0 - dAlpha)); i++) {
+        sequential += work(i);
+    }
+
+    iLoad = toi(load * dAlpha);
+    parallel = with {
+        ([0] <= [i] <= [iLoad]) : work(i);
+    } : genarray([iLoad+1], 0.0);
+
+    return (sequential, parallel);
+}
+
+void amdahl( SNet::SNet &hnd, int predictor, int alpha, int order, double[.] coefficients)
+{
+    load = 0.0;
+    x = tod(predictor);
+    for (i = 0; i <= order; i++) {
+        load += pow(x, tod(i)) * coefficients[i];
+    }
+    seq, par = task(load, alpha);
+    SNet::out( hnd, 1, predictor, sacprelude::wrap(seq), sacprelude::wrap(par));
+}
